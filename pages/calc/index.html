@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lab2-3 | Calculator</title>
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+        p {
+            margin-block: 5px;
+        }
+        #inpa {
+            margin-right: 10px;
+        }
+        #subm {
+            margin-left: 47px;
+        }
+        #res {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <form>
+        <p>Перше число: <input type="number" size="3" name="a"> Друге число: <input type="number" size="3" name="b"></p>
+        <p>Оператор: <select name="oper">
+            <option value="+">Додати</option>
+            <option value="-">Відняти</option>
+            <option value="×">Помножити</option>
+            <option value="≈">Порівняти</option>
+        </select> <input type="button" id="subm" value="Розрахувати"></p>
+    </form>
+    <p id="outp"></p>
+    <script>
+        const inpa = document.querySelector('[name="a"]')
+        const inpb = document.querySelector('[name="b"]')
+        const oper = document.querySelector('[name="oper"]')
+        const outp = document.getElementById('outp')
+        const subm = document.getElementById('subm')
+
+        const submit = () => {
+            console.log('Sending request...')
+            fetch('calc/post', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `a=${inpa.value}&b=${inpb.value}&oper=${encodeURIComponent(oper.value)}`
+            })
+            .then(res => {
+                console.log('Got response')
+                return res.text()
+            })
+            .then(data => {
+                outp.innerHTML = 'Відповідь: <span id="res">' + data + '</span>'
+                console.log('Data written')
+            })
+            .catch(console.error)
+        }
+
+        subm.addEventListener('click', submit)
+    </script>
+</body>
+</html>

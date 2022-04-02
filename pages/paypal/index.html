@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PayPal Test</title>
+    <script src="https://www.paypalobjects.com/donate/sdk/donate-sdk.js" charset="UTF-8"></script>
+</head>
+<body>
+    <div id="donate-button"></div>
+    <script>
+        PayPal.Donation.Button({
+            env:'sandbox',
+            hosted_button_id:'5PGFXMFU2DP3J',
+            image: {
+                src:'https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif',
+                alt:'Donate with PayPal button',
+                title:'PayPal - The safer, easier way to pay online!',
+            },
+            item_name: 'donut',
+            custom: document.location,
+            onComplete(params) {
+                console.log('Params:', params)
+            }
+        }).render('#donate-button')
+    </script>
+</body>
+</html>
