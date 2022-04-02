@@ -1,8 +1,8 @@
-import express = require('express')
-import fs = require('fs')
-import https = require('https')
-import qs = require('qs')
-import stream = require('stream')
+import express from 'express'
+import fs from 'fs'
+import https from 'https'
+import qs from 'qs'
+import stream from 'stream'
 
 const streamToBuffer = (str: stream.Readable) => new Promise<Buffer>((res, rej) => {
     const chks: Buffer[] = []

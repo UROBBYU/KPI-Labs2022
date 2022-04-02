@@ -1,6 +1,6 @@
-import express = require('express')
-// import php = require('express-php-middleware')
-import php = require('../../php-cgi/src')
+import express from 'express'
+// import php from 'express-php-middleware'
+import php from '../../php-cgi/src'
 
 const file_php = php('pages/phpinfo/index.php')
 const env_php = php('pages/phpinfo/env/index.php')

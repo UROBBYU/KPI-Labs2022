@@ -1,5 +1,5 @@
-import express = require('express')
-import fs = require('fs')
+import express from 'express'
+import fs from 'fs'
 
 module.exports = express.Router()
 

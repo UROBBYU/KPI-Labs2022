@@ -1,7 +1,7 @@
-import express = require('express')
-import cors = require('cors')
-import https = require('https')
-import fs = require('fs')
+import express from 'express'
+import cors from 'cors'
+import https from 'https'
+import fs from 'fs'
 
 https.createServer({
     key: fs.readFileSync('D:/Programming/Web/certs/urepo.online.key', 'utf8'),

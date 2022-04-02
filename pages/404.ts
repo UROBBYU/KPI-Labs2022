@@ -1,4 +1,4 @@
-import express = require('express')
+import express from 'express'
 
 module.exports = ((req, res) => {
     res.status(404)
