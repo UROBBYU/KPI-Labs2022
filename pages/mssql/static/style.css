@@ -1,0 +1,114 @@
+body {
+	background-color: #0d1117;
+	color: white;
+	font-family: Roboto;
+	--width: 600px;
+}
+
+body > div {
+	width: max-content;
+	display: grid;
+	grid-gap: 8px;
+}
+
+#tables {
+	width: var(--width);
+	grid-row: 1 / 6;
+}
+
+.block {
+	background-color: #181c23;
+	overflow: hidden;
+	border-radius: 8px;
+	border: solid 1px #30363d;
+}
+
+#tables > :first-child {
+	line-height: 40px;
+	text-align: center;
+	font-size: 1.2em;
+	font-weight: bold;
+}
+
+.pages > :first-child {
+	display: flex;
+	border-block: solid 2px #30363d;
+	line-height: 30px;
+}
+
+.pages > :first-child > * {
+	width: 100%;
+	text-align: center;
+    user-select: none;
+	cursor: pointer;
+	transition: background-color 0.2s, border-color 0.2s;
+}
+
+.pages > :first-child > :hover,
+.block:not(:first-child):hover {
+    background-color: #262a2f;
+}
+
+.pages > :first-child > .selected {
+    background-color: #30363d;
+}
+
+.pages > :last-child {
+	display: grid;
+	cursor: default;
+	margin-left: calc(var(--width) * var(--page) * -1);
+}
+
+.pages > :last-child > * {
+	grid-row: 1;
+	width: var(--width);
+	margin-bottom: auto;
+	padding: 5px;
+	border-spacing: 0;
+}
+
+td, th {
+	text-align: center;
+	padding-block: 3px;
+	user-select: none;
+}
+
+tr:nth-child(2n - 1) {
+	background-color: #1f242d;
+}
+
+tr.selected {
+	background-color: #01424a;
+}
+
+td.selected {
+	background-color: #006c78;
+	border-radius: 30px;
+}
+
+.block:not(:first-child) {
+	grid-column: 2;
+	width: 40px;
+	line-height: 40px;
+	text-align: center;
+	font-size: 2em;
+	user-select: none;
+	cursor: pointer;
+	transition: background-color 0.2s, border-color 0.2s;
+}
+
+#update:hover {
+	border-color: cyan;
+}
+
+#plus:hover {
+	border-color: chartreuse;
+}
+
+#minus:hover {
+	border-color: red;
+}
+
+#edit:hover {
+	border-color: orange;
+}

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lab 6 | SQL</title>
+    <link rel="stylesheet" href="mssql/st/style.css">
+    <script>
+        window.createElement = (html) => {
+            const tmp = document.createElement('template')
+            tmp.innerHTML = html.trim()
+            return tmp.content.firstChild
+        }
+
+        window.addEventListener('load', () => {
+            const pages = document.querySelector('.pages')
+            const tables = document.querySelector('.pages > :last-child')
+            const buttons = document.querySelectorAll('.pages > :first-child > *')
+
+            const tablesMap = {
+                groups: {
+                    group_id: 'ID',
+                    title: 'Назва',
+                    state: 'Стан'
+                },
+                students: {
+                    student_id: 'ID',
+                    fio: 'ПІБ',
+                    group_id: 'GID',
+                    birthday: { toString: () => 'День народження', prep: (v) => v.split('-').reverse().join('.') },
+                    sex: { toString: () => 'Стать', prep: (v) => v == 1 ? 'Ч' : 'Ж' }
+                },
+                students_hostel: {
+                    student_id: 'ID',
+                    hostel_id: 'ID хостелу'
+                },
+                students_rating: {
+                    student_id: 'ID',
+                    semestr_id: { toString: () => 'Семестр', prep: (v) => `20${v[0]}${v[1]}-${v[2]}` },
+                    rating: 'Рейтинг',
+                    stipend: { toString: () => 'Стипендія', prep: (v) => +v ? '✔' : '❌' }
+                }
+            }
+
+            const createTable = (data, headers) => {
+                const table = createElement('<table></table>')
+                table.append(createElement(`<tr>${Object.values(headers).map(v => `<th>${v.toString()}</th>`)}</tr>`))
+
+                for (const row of data) {
+                    table.append(createElement(`<tr>${Object.keys(headers).map(v => {
+                        const val = headers[v].prep ? headers[v].prep(row[v]) : row[v]
+                        return `<td>${val}</td>`
+                    })}</tr>`))
+                }
+
+                return table
+            }
+
+            const updateTables = async () => {
+                const sqldata = await (await fetch('mssql/php?type=getall')).json()
+
+                tables.innerHTML = ''
+                tables.append(createTable(sqldata.groups, tablesMap.groups))
+                tables.append(createTable(sqldata.students, tablesMap.students))
+                tables.append(createTable(sqldata.students_hostel, tablesMap.students_hostel))
+                tables.append(createTable(sqldata.students_rating, tablesMap.students_rating))
+
+                const cells = document.querySelectorAll('td')
+                for (const cell of cells) {
+                    cell.addEventListener('pointerdown', () => {
+                        const selCell = document.querySelector('td.selected')
+                        if (selCell != cell) {
+                            const par = selCell?.parentElement
+                            selCell?.classList?.remove('selected')
+                            cell.classList.add('selected')
+                            if (par != cell.parentElement) {
+                                par?.classList?.remove('selected')
+                                cell.parentElement.classList.add('selected')
+                            }
+                        }
+                    })
+                }
+            }
+
+            updateTables()
+
+            buttons.forEach((button, i) => {
+                button.addEventListener('pointerdown', () => {
+                    if (!button.classList.contains('selected')) {
+                        button.parentElement.querySelector('.selected').classList.remove('selected')
+                        button.classList.add('selected')
+                        pages.style.setProperty('--page', i)
+
+                        document.querySelector('td.selected')?.classList?.remove('selected')
+                        document.querySelector('tr.selected')?.classList?.remove('selected')
+                    }
+                })
+            })
+
+            document.getElementById('update').addEventListener('pointerdown', updateTables)
+            document.getElementById('plus').addEventListener('pointerdown', async () => {
+                const values = prompt("Введіть значення розділені '/':")?.split('/')?.map(v => v.trim())
+                if (values) {
+                    const page = +pages.style.getPropertyValue('--page')
+                    const table = Object.keys(tablesMap)[page]
+                    if (values.length == Object.keys(tablesMap[table]).length) {
+                        await fetch(`mssql/php?type=add&table=students&values=${encodeURIComponent(values.join('/'))}`)
+                        updateTables()
+                    } else alert('Введено некорректні дані')
+                }
+            })
+            document.getElementById('minus').addEventListener('pointerdown', async () => {
+                const sel = document.querySelector('tr.selected')
+                if (sel) {
+                    const page = +pages.style.getPropertyValue('--page')
+                    const table = Object.keys(tablesMap)[page]
+                    const key = page ? 'student_id' : 'group_id'
+                    let idVal = sel.children[0].innerText
+                    if (isNaN(+idVal)) idVal = `'${idVal}'`
+                    await fetch(`mssql/php?type=delete&table=${table}&condition=${encodeURIComponent(`${key}=${idVal}`)}`)
+                    updateTables()
+                } else alert('Виберіть рядок для видалення')
+            })
+            document.getElementById('edit').addEventListener('pointerdown', async () => {
+                const sel = document.querySelector('td.selected')
+                if (sel) {
+                    const page = +pages.style.getPropertyValue('--page')
+                    const table = Object.keys(tablesMap)[page]
+                    const key = Object.keys(tablesMap[table])[[...sel.parentElement.children].indexOf(sel)]
+                    const value = prompt('Нове значення:', sel.innerText)
+                    const id = page ? 'student_id' : 'group_id'
+                    let idVal = sel.parentElement.children[0].innerText
+                    if (isNaN(+idVal)) idVal = `'${idVal}'`
+                    if (value != null) {
+                        await fetch(`mssql/php?type=update&table=${table}&key=${key}&value=${encodeURIComponent(value)}&condition=${encodeURIComponent(`${id}=${idVal}`)}`)
+                        updateTables()
+                    }
+                } else alert('Виберіть клітинку для редагування')
+            })
+        })
+    </script>
+</head>
+<body>
+    <div>
+        <div id="tables" class="block">
+            <div>Таблиці</div>
+            <div class="pages" style="--page: 0">
+                <div>
+                    <div class="selected">Групи</div>
+                    <div>Студенти</div>
+                    <div>Гуртожитки</div>
+                    <div>Рейтинг</div>
+                </div>
+                <div></div>
+            </div>
+        </div>
+        <div id="update" class="block" title="Оновити">⟳</div>
+        <div id="plus" class="block" title="Додати">+</div>
+        <div id="minus" class="block" title="Видалити">-</div>
+        <div id="edit" class="block" title="Редагувати">✏</div>
+    </div>
+</body>
+</html>
