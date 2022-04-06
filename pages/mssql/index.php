@@ -1,12 +1,10 @@
 <?php
     $ret = array();
 
-    class Dekanat {
-        private $BD;
-
+    class Dekanat extends PDO {
         function __construct() {
-            $this->BD = new PDO("sqlsrv:Server=localhost,1433;Database=KPI", "testname", "testpass");
-            $this->BD->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            parent::__construct('sqlsrv:Server=localhost,1433;Database=KPI', 'testname', 'testpass');
+            $this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
 
         function getGroupData(int $group_id) {
@@ -22,7 +20,7 @@
         }
 
         function select(string $table, string $condition = null) {
-            $stmt = $this->BD->query('SELECT * FROM [' . $table . ']' . ($condition ? ' WHERE ' . $condition : ''));
+            $stmt = $this->query('SELECT * FROM [' . $table . ']' . ($condition ? ' WHERE ' . $condition : ''));
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
 
@@ -30,16 +28,16 @@
             foreach ($values as &$val) {
                 if (!is_numeric($val)) $val = "'" . str_replace("'", "''", $val) . "'";
             }
-            $this->BD->query('INSERT INTO [' . $table . '] VALUES (' . implode(',', $values) . ')');
+            $this->query('INSERT INTO [' . $table . '] VALUES (' . implode(',', $values) . ')');
         }
 
         function update(string $table, string $key, mixed $value, string $condition = null) {
             if (!is_numeric($value)) $value = "'" . str_replace("'", "''", $value) . "'";
-            $this->BD->query('UPDATE [' . $table . '] SET ' . $key . ' = ' . $value . ($condition ? ' WHERE ' . $condition : ''));
+            $this->query('UPDATE [' . $table . '] SET ' . $key . ' = ' . $value . ($condition ? ' WHERE ' . $condition : ''));
         }
 
         function delete(string $table, string $condition = null) {
-            $this->BD->query('DELETE FROM [' . $table . ']' . ($condition ? ' WHERE ' . $condition : ''));
+            $this->query('DELETE FROM [' . $table . ']' . ($condition ? ' WHERE ' . $condition : ''));
         }
     }
 
