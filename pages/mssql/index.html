@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Lab 6 | SQL</title>
-    <link rel="stylesheet" href="mssql/st/style.css">
+    <link rel="stylesheet" href="st/style.css">
     <script>
         window.createElement = (html) => {
             const tmp = document.createElement('template')
@@ -55,7 +55,7 @@
             }
 
             const updateTables = async () => {
-                const sqldata = await (await fetch('mssql/php?type=getall')).json()
+                const sqldata = await (await fetch('php?type=getall')).json()
 
                 tables.innerHTML = ''
                 tables.append(createTable(sqldata.groups, tablesMap.groups))
@@ -102,7 +102,7 @@
                     const page = +pages.style.getPropertyValue('--page')
                     const table = Object.keys(tablesMap)[page]
                     if (values.length == Object.keys(tablesMap[table]).length) {
-                        await fetch(`mssql/php?type=add&table=students&values=${encodeURIComponent(values.join('/'))}`)
+                        await fetch(`php?type=add&table=students&values=${encodeURIComponent(values.join('/'))}`)
                         updateTables()
                     } else alert('Введено некорректні дані')
                 }
@@ -115,7 +115,7 @@
                     const key = page ? 'student_id' : 'group_id'
                     let idVal = sel.children[0].innerText
                     if (isNaN(+idVal)) idVal = `'${idVal}'`
-                    await fetch(`mssql/php?type=delete&table=${table}&condition=${encodeURIComponent(`${key}=${idVal}`)}`)
+                    await fetch(`php?type=delete&table=${table}&condition=${encodeURIComponent(`${key}=${idVal}`)}`)
                     updateTables()
                 } else alert('Виберіть рядок для видалення')
             })
@@ -130,7 +130,7 @@
                     let idVal = sel.parentElement.children[0].innerText
                     if (isNaN(+idVal)) idVal = `'${idVal}'`
                     if (value != null) {
-                        await fetch(`mssql/php?type=update&table=${table}&key=${key}&value=${encodeURIComponent(value)}&condition=${encodeURIComponent(`${id}=${idVal}`)}`)
+                        await fetch(`php?type=update&table=${table}&key=${key}&value=${encodeURIComponent(value)}&condition=${encodeURIComponent(`${id}=${idVal}`)}`)
                         updateTables()
                     }
                 } else alert('Виберіть клітинку для редагування')
