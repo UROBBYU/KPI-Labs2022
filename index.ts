@@ -47,6 +47,8 @@ https.createServer({
 
     .use('/mssql/', require('./pages/mssql'))
 
+    .get('/favicon.ico', require('./pages/favicon'))
+
     .use(require('./pages/404'))
 
     .use(((err, req, res, next) => {
