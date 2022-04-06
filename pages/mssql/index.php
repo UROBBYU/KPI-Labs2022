@@ -28,13 +28,13 @@
 
         function insert(string $table, string ...$values) {
             foreach ($values as &$val) {
-                if (!is_numeric($val)) $val = "'" . $val . "'";
+                if (!is_numeric($val)) $val = "'" . str_replace("'", "''", $val) . "'";
             }
             $this->BD->query('INSERT INTO [' . $table . '] VALUES (' . implode(',', $values) . ')');
         }
 
         function update(string $table, string $key, mixed $value, string $condition = null) {
-            if (!is_numeric($value)) $value = "'" . $value . "'";
+            if (!is_numeric($value)) $value = "'" . str_replace("'", "''", $value) . "'";
             $this->BD->query('UPDATE [' . $table . '] SET ' . $key . ' = ' . $value . ($condition ? ' WHERE ' . $condition : ''));
         }
 
