@@ -43,7 +43,7 @@ input[type=search] {
     line-height: 1.5em;
     border: inset 1px #373d43;
     outline: none !important;
-	font-size: 0.7em;
+	font-size: 1em;
 }
 
 input[type=search]:is(:focus-visible, :hover) {
@@ -94,7 +94,7 @@ td > :is(input, select) {
 	color: white;
 	border: inset 1px #373d43;
     text-align: center;
-	font-size: 0.7em;
+	font-size: 1em;
 }
 
 td > :is(input, select):is(:focus-visible, :hover) {
