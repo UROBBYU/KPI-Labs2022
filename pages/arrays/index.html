@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Lab 4 | Arrays</title>
+    <link rel="stylesheet" href="/arrays/st/style.css">
+    <script>
+        window.createElement = (html) => {
+            const tmp = document.createElement('template')
+            tmp.innerHTML = html.trim()
+            return tmp.content.firstChild
+        }
+
+        window.addEventListener('load', () => {
+            const search = document.querySelector('input[type=search]')
+            const srcList = document.getElementById('src-list')
+            const table = document.querySelector('tbody')
+            const [sub, inSur, inRate, inSex] = document.querySelectorAll('#add :is(:only-child, td:first-child)')
+            const boysv = document.querySelector('#boys > span')
+            const girlsv = document.querySelector('#girls > span')
+
+            const redrawTable = async data => {
+                const { array, boys, girls } = await (await fetch('/arrays/php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ array: data })
+                })).json()
+
+                inSur.value = ''
+                inRate.value = ''
+                inSex.value = ''
+                table.innerHTML = ''
+                srcList.innerHTML = ''
+                boysv.innerText = boys
+                girlsv.innerText = girls
+
+                for (const row of array) {
+                    const del = createElement('<td>❌</td>')
+                    const sur = createElement('<td></td>')
+                    const rate = createElement('<td></td>')
+                    const sex = createElement('<td></td>')
+
+                    const tr = createElement('<tr></tr>')
+
+                    const opt = createElement(`<option>`)
+
+                    sur.innerText = row.sur
+                    rate.innerText = row.rate
+                    sex.innerText = row.sex
+
+                    opt.value = row.sur
+
+                    del.addEventListener('pointerup', () => {
+                        tr.remove()
+
+                        const values = Array.from(table.querySelectorAll('tr')).map(v => ({
+                            sur: v.children[1].innerText,
+                            rate: v.children[2].innerText,
+                            sex: v.children[3].innerText
+                        }))
+
+                        redrawTable(values)
+                    })
+
+                    tr.append(del)
+                    tr.append(sur)
+                    tr.append(rate)
+                    tr.append(sex)
+                    
+                    table.append(tr)
+
+                    srcList.append(opt)
+                }
+            }
+
+            search.addEventListener('keyup', async e => {
+                if (e.key == 'Enter') {
+                    let sur = search.value
+                    const rate = sur.match(/(^| )rate:\s*([\d\.]+)/)
+                    if (rate) sur = sur.replace(rate[0], '')
+                    const sex = sur.match(/(^| )sex:\s*([ЧЖ])/)
+                    if (sex) sur = sur.replace(sex[0], '')
+                    sur = sur.trim()
+
+                    search.disabled = true
+                    let { id } = await (await fetch('/arrays/php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            type: 'find',
+                            array: Array.from(table.querySelectorAll('tr')).map(v => ({
+                                sur: v.children[1].innerText,
+                                rate: v.children[2].innerText,
+                                sex: v.children[3].innerText
+                            })),
+                            sur: sur.length ? sur : undefined,
+                            rate: rate?.[2],
+                            sex: sex?.[2]
+                        })
+                    })).json()
+                    search.disabled = false
+
+                    if (id--) {
+                        table.children[id].animate({
+                            background: '#0092a5',
+                            offset: [0.4, 0.6]
+                        }, {
+                            duration: 1500,
+                            easing: 'ease-in-out'
+                        })
+                    }
+                    else {
+                        search.animate({
+                            borderColor: ['red', '#373d43', 'red'],
+                            offset: [0.4, 0.5, 0.6]
+                        }, {
+                            duration: 500,
+                        })
+                    }
+                }
+            })
+
+            sub.addEventListener('pointerup', () => {
+                if (inSur.reportValidity() && inRate.reportValidity() && inSex.reportValidity()) {
+                    const values = [...Array.from(table.querySelectorAll('tr')).map(v => ({
+                        sur: v.children[1].innerText,
+                        rate: v.children[2].innerText,
+                        sex: v.children[3].innerText
+                    })), {
+                        sur: inSur.value,
+                        rate: inRate.value,
+                        sex: inSex.value
+                    }]
+                    redrawTable(values)
+                }
+            })
+
+            redrawTable([
+                {
+                    sur: 'Кірігая',
+                    rate: 3.1,
+                    sex: 'Ч'
+                }, {
+                    sur: 'Юкі',
+                    rate: 4.8,
+                    sex: 'Ж'
+                }, {
+                    sur: 'Асада',
+                    rate: 4.5,
+                    sex: 'Ж'
+                }, {
+                    sur: 'Цубой',
+                    rate: 3.6,
+                    sex: 'Ч'
+                }, {
+                    sur: 'Аяно',
+                    rate: 3.9,
+                    sex: 'Ж'
+                }
+            ])
+        })
+    </script>
+</head>
+<body>
+    <div class="block">
+        <div id="search">
+            <input type="search" list="src-list" placeholder="Шукати студента... [rate: | sex:]">
+            <datalist id="src-list"></datalist>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Прізвище</th>
+                    <th>Рейтинг</th>
+                    <th>Стать</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+            <tfoot>
+                <tr id="add">
+                    <td>✅</td>
+                    <td><input type="text" size="10" required></td>
+                    <td><input type="number" min="0" max="5" step="0.1" size="1" required></td>
+                    <td>
+                        <select size="1" required>
+                            <option value="Ч">Ч</option>
+                            <option value="Ж">Ж</option>
+                        </select>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+        <div id="boys">Хлопців: <span>0</span></div>
+        <div id="girls">Дівчат: <span>0</span></div>
+    </div>
+</body>
+</html>
