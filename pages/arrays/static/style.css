@@ -14,6 +14,7 @@ body {
     grid-template-columns: 1fr 1fr;
     transform-origin: top left;
     transform: scale(2);
+	font-size: 0.7em;
 }
 
 #search {
@@ -42,6 +43,7 @@ input[type=search] {
     line-height: 1.5em;
     border: inset 1px #373d43;
     outline: none !important;
+	font-size: 0.7em;
 }
 
 input[type=search]:is(:focus-visible, :hover) {
@@ -68,6 +70,11 @@ td:first-child {
     cursor: pointer;
 }
 
+#add > td:first-child {
+	transform: rotate(45deg);
+	filter: hue-rotate(100deg) brightness(1.5);
+}
+
 td:first-child:hover {
     opacity: 1;
 }
@@ -87,6 +94,7 @@ td > :is(input, select) {
 	color: white;
 	border: inset 1px #373d43;
     text-align: center;
+	font-size: 0.7em;
 }
 
 td > :is(input, select):is(:focus-visible, :hover) {
