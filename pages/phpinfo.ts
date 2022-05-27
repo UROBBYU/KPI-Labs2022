@@ -1,13 +1,15 @@
 import express from 'express'
-// import php from 'express-php-middleware'
+// import php from 'http-php'
 import php from '../../php-cgi/src'
 
-const file_php = php('pages/phpinfo/index.php')
+const file_php = php({
+    file: 'pages/phpinfo/index.php'
+})
 const env_php = php('pages/phpinfo/env/index.php')
 
 module.exports = express.Router()
 
-.all('/', (req, res, next) => {
+.all('*', (req, res, next) => {
     file_php(req, res).catch(next)
 })
 

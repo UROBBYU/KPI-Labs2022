@@ -36,7 +36,7 @@
                     student_id: 'ID',
                     semestr_id: { toString: () => 'Семестр', prep: (v) => `20${v[0]}${v[1]}-${v[2]}` },
                     rating: 'Рейтинг',
-                    stipend: { toString: () => 'Стипендія', prep: (v) => +v ? '✔' : '❌' }
+                    stipend: { toString: () => 'Стипендія', prep: (v) => +v ? '✔' : '✘' }
                 }
             }
 

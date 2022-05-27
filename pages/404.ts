@@ -25,7 +25,7 @@ module.exports = ((req, res) => {
                             width: 52vmin;
                             text-align: center;
                             margin: 50vh 50vw;
-                            translate: -50% -50%;
+							transform: translate(-50%, -50%);
                             color: #fff;
                             text-shadow: 5px 4px 3px #000;
                         }

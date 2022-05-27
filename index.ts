@@ -47,6 +47,8 @@ https.createServer({
 
     .use('/mssql/', require('./pages/mssql'))
 
+    .use('/laravel/', require('./pages/laravel'))
+
     .get('/favicon.ico', require('./pages/favicon'))
 
     .use(require('./pages/404'))
