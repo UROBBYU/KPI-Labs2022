@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\AdminGroupController;
-use App\Http\Controllers\GroupsController;
+use App\Http\Controllers\AdminRequestController;
+use App\Http\Controllers\RequestsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,24 +15,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
+Route::get('laravel', function () {
     return view('welcome');
 });
 
-Route::get('groups', [GroupsController::class, 'index']);
+Route::get('laravel/requests', [RequestsController::class, 'index']);
 
-Route::get('group/{id}', [GroupsController::class, 'group']);
+Route::get('laravel/requests/extended', [RequestsController::class, 'extended']);
 
-Route::resource('admin/groups', AdminGroupController::class);
-
-/*Route::get('admin/groups', [AdminGroupController::class, 'index']);
-
-Route::get('admin/groups/create', [AdminGroupController::class, 'create']);
-
-Route::get('admin/groups/store', [AdminGroupController::class, 'store']);
-
-Route::get('admin/groups/edit', [AdminGroupController::class, 'edit']);
-
-Route::get('admin/groups/update', [AdminGroupController::class, 'update']);
-
-Route::get('admin/groups/destroy', [AdminGroupController::class, 'destroy']);*/
+Route::resource('laravel/admin/requests', AdminRequestController::class)
+->middleware('basicAuth');

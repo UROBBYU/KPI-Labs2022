@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        body {
+            background-color: #0d1117;
+        }
+        .menu {
+            z-index: 2;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            display: flex;
+            justify-content: right;
+        }
+        .menu > a {
+            position: relative;
+            flex-basis: content;
+            margin-left: -1px;
+            padding-inline: 1em;
+            width: 100px;
+            line-height: 2em;
+            text-align: center;
+            font-size: 1.8em;
+            font-weight: bold;
+            font-family: sans-serif;
+            text-decoration: none;
+            user-select: none;
+            color: beige;
+            background-color: var(--bg);
+            transition: filter 0.2s;
+        }
+        .menu > a::before {
+            content: '';
+            display: inline-block;
+            position: absolute;
+            top: 0;
+            left: -0.5em;
+            width: 0;
+            height: 0;
+            box-shadow: 3px 0 0 0 var(--bg);
+            border-right: solid 0.5em var(--bg);
+            border-block: solid 1em transparent;
+        }
+        .menu > a:hover {
+            filter: brightness(0.8);
+        }
+        .menu span {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu">
+        <a style="--bg: darkseagreen" href="kek"><span>Home</span></a>
+        <a style="--bg: darkcyan" href="kek"><span>List</span></a>
+        <a style="--bg: darksalmon" href="kek"><span>Create</span></a>
+        <a style="--bg: darkslategrey" href="kek"><span>Exit</span></a>
+    </div>
+</body>
+</html>

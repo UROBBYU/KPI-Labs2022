@@ -1,1 +1,1 @@
-<footer>ТПЗА - 2022, Лабораторна робота №7</footer>
+<footer style="margin-top: 70px">ТПЗА - 2022, Лабораторні роботи №7-9</footer>

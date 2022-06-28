@@ -49,6 +49,8 @@ https.createServer({
 
     .use('/laravel/', require('./pages/laravel'))
 
+    .use('/auth/', require('./pages/auth'))
+
     .get('/favicon.ico', require('./pages/favicon'))
 
     .use(require('./pages/404'))
