@@ -80,7 +80,7 @@ class AdminRequestController extends Controller
         $request->content_length = $req->input('content_length');
         $request->referrer = $req->input('referrer');
         $request->country = $req->input('country');
-        $request->datetime = $req->input('date') . ' ' . $req->input('time')/* date('H:i:sa') */;
+        $request->datetime = $req->input('date') . ' ' . $req->input('time');
 
         $request->save();
 

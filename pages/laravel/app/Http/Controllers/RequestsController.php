@@ -37,13 +37,4 @@ class RequestsController extends Controller
             'months' => $months
         ]);
     }
-
-    /* public function group(Request $req, $id) {
-        $model_groups = new Group();
-        $group = $model_groups->getGroupByID($id);
-
-        return view('groups.group', [
-            'group' => $group
-        ]);
-    } */
 }
